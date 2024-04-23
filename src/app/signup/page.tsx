@@ -16,7 +16,7 @@ import {
 import { Input } from "@/components/ui/input";
 import axios from "axios";
 import Cookies from "js-cookie";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 
 const formSchema = z.object({
   password: z.string().min(6, {

@@ -32,15 +32,26 @@ export default function Navbar() {
   };
   useEffect(() => {
     const cartProducts = async () => {
-      const cart = await axios.get("/api/cart", {
+      let cart = await axios.get("/api/cart", {
         headers: { uid: Cookies.get("uid") },
       });
+      if (!cart.data[0]?.cid) {
+        const response = await axios.post("/api/cart", {
+          price: 0,
+          uid: Cookies.get("uid"),
+        });
+        cart = await axios.get("/api/cart", {
+          headers: { uid: Cookies.get("uid") },
+        });
+      }
       const products = await axios.get("/api/cart/cart-products", {
         headers: { cid: cart.data[0].cid },
       });
       setProducts(products.data);
     };
-    cartProducts();
+    if (Cookies.get("uid")) {
+      cartProducts();
+    }
   }, []);
   return (
     <header className="py-4 px-4 sm:px-10 bg-[#091235] font-[sans-serif] min-h-[70px]">
@@ -65,7 +76,7 @@ export default function Navbar() {
             ></path>
           </svg>
         </button>
-        <Link href="/cart">
+        <Link href={Cookies.get("uid") ? "/cart" : "/login"}>
           <div className="flex lg:ml-auto max-lg:w-full">
             <span className="relative mr-8">
               <svg
@@ -116,6 +127,21 @@ export default function Navbar() {
               className="bg-[#091235] absolute -top-[150%] left-0 inline-flex w-80 h-[5px] rounded-md opacity-50 duration-500"
             ></Link>
             <Link href="/about">About</Link>
+            <Link
+              href="/about"
+              className="bg-[#091235] absolute -top-[150%] left-0 inline-flex w-80 h-[5px] rounded-md opacity-50 duration-500"
+            ></Link>
+          </li>
+          <li className="bg-[#fdd000] font-sans cursor-pointer max-lg:border-b max-lg:py-2 border border-black border-b-4 font-medium overflow-hidden relative px-4 py-2 rounded-md hover:brightness-150 hover:border-t-4 hover:border-b active:opacity-50 outline-none duration-300 group">
+            <Link
+              href="/pc-builder"
+              className="bg-[#091235] absolute -top-[150%] left-0 inline-flex w-80 h-[5px] rounded-md opacity-50 duration-500"
+            ></Link>
+            <Link href="/pc-builder">PC Builder</Link>
+            <Link
+              href="/pc-builder"
+              className="bg-[#091235] absolute -top-[150%] left-0 inline-flex w-80 h-[5px] rounded-md opacity-50 duration-500"
+            ></Link>
           </li>
           <li className="bg-[#fdd000] font-sans cursor-pointer max-lg:border-b max-lg:py-2 border border-black border-b-4 font-medium overflow-hidden relative px-4 py-2 rounded-md hover:brightness-150 hover:border-t-4 hover:border-b active:opacity-75 outline-none duration-300 group">
             <Link
@@ -159,13 +185,6 @@ export default function Navbar() {
               </li>
             </>
           ) : null}
-          <li className="bg-[#fdd000] font-sans cursor-pointer max-lg:border-b max-lg:py-2 border border-black border-b-4 font-medium overflow-hidden relative px-4 py-2 rounded-md hover:brightness-150 hover:border-t-4 hover:border-b active:opacity-75 outline-none duration-300 group">
-            <Link
-              href="/contact"
-              className="bg-[#091235] absolute -top-[150%] left-0 inline-flex w-80 h-[5px] rounded-md opacity-50 duration-500"
-            ></Link>
-            <Link href="/contact">Contact</Link>
-          </li>
         </ul>
       </div>
     </header>

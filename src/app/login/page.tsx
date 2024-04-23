@@ -42,11 +42,11 @@ export default function Login() {
       Cookies.set("phone", response.data.phone, { expires: 100 });
       Cookies.set("role", response.data.role, { expires: 100 });
       Cookies.set("uid", response.data.uid, { expires: 100 });
-      router.refresh();
+      router.push("/");
     } catch (error: any) {
-      if (error.response.data === "User already exists") {
+      if (error.response.data === "Error") {
         form.setError("email", {
-          message: "Email already exists.",
+          message: "Error.",
         });
       }
     }

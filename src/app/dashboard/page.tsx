@@ -11,9 +11,14 @@ export default async function Component() {
   const productCount = await db.promise().query("SELECT count(*) FROM product");
   const orderCount = await db.promise().query("SELECT count(*) FROM `order`");
   const customerCount = await db.promise().query("SELECT count(*) FROM user");
+  const orders = await db
+    .promise()
+    .query("SELECT * FROM `order` ORDER BY date DESC LIMIT 3");
+  console.log(orders);
+
   return (
     <>
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         <Card>
           <CardHeader>
             <CardTitle>Products</CardTitle>
@@ -59,19 +64,6 @@ export default async function Component() {
             <UsersIcon className="w-10 h-10" />
           </CardContent>
         </Card>
-        <Card>
-          <CardHeader>
-            <CardTitle>Analytics</CardTitle>
-            <CardDescription>View sales and site analytics</CardDescription>
-          </CardHeader>
-          <CardContent className="flex items-center justify-between">
-            <div className="flex flex-col">
-              <CardTitle className="font-bold">890</CardTitle>
-              <CardDescription className="text-sm">Visits</CardDescription>
-            </div>
-            <BarChartIcon className="w-10 h-10" />
-          </CardContent>
-        </Card>
       </div>
       <Card>
         <CardHeader>
@@ -79,25 +71,18 @@ export default async function Component() {
           <CardDescription>View your most recent orders</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="flex flex-col gap-4">
-            <div className="flex items-center gap-4">
-              <div className="font-semibold">Order #3456</div>
-              <div className="ml-auto text-sm shrink-0">
-                <span className="sr-only">Order date:</span>2 hours ago
-                {"\n                                  "}
+          {orders[0].map((order: any) => (
+            <div className="flex flex-col gap-4 my-4">
+              <div className="flex items-center gap-4">
+                <div className="font-semibold">Order #{order.oid}</div>
+                <div className="ml-auto text-sm shrink-0">
+                  <span className="sr-only">Order date:</span>{" "}
+                  {order.date.toString()}
+                  {"\n                                  "}
+                </div>
               </div>
             </div>
-            <div className="grid gap-2 text-sm">
-              <div className="grid grid-cols-2 items-start">
-                <div>1x Glimmer Lamps</div>
-                <div className="text-right">$60.00</div>
-              </div>
-              <div className="grid grid-cols-2 items-start">
-                <div>1x Aqua Filters</div>
-                <div className="text-right">$49.00</div>
-              </div>
-            </div>
-          </div>
+          ))}
         </CardContent>
       </Card>
     </>

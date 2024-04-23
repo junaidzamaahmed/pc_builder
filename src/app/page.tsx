@@ -93,7 +93,7 @@ export default function Home() {
           </li>
         </ul>
       </nav>
-      <section className="text-black py-32">
+      <section className="text-black py-32 h-[65vh]">
         <div className="container mx-auto text-center">
           <h1 className="text-4xl md:text-6xl font-semibold mb-4">
             Build Your Dream PC
